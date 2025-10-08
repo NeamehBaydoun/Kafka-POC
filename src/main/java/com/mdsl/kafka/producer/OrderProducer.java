@@ -1,16 +1,16 @@
 package com.mdsl.kafka.producer;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class OrderProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-
-    public OrderProducer(KafkaTemplate<String, String> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
 
     public void sendOrder(String orderId) {
         String topic = "orders-poc";
@@ -22,13 +22,13 @@ public class OrderProducer {
         String topic = "orders-poc";
         String message = "New order received: " + orderId;
         kafkaTemplate.send(topic,1, orderId, message);
-        System.out.println("📤 Sent order " + orderId + " to partition 1");
+        log.debug("Sent order {} to partition 1", orderId);
     }
 
     public void sendOrderV3(String orderId)  {
         String topic = "orders-poc";
         String message = "New order received: " + orderId;
         kafkaTemplate.send(topic,2, orderId, message);
-        System.out.println(Thread.currentThread().getName() + ": 📤 Sent order " + orderId + " to partition 2");
+        log.debug("{}: Sent order {} to partition 2", Thread.currentThread().getName(), orderId);
     }
 }

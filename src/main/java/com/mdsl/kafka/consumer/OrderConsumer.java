@@ -1,5 +1,6 @@
 package com.mdsl.kafka.consumer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class OrderConsumer {
 
     @KafkaListener(
@@ -15,8 +17,7 @@ public class OrderConsumer {
                     topic = "orders-poc", partitions = {"0"}),
             groupId = "orders-consumer-group")
     public void listen(ConsumerRecord<String, String> record) {
-        System.out.println("📥 Consumed message from partition " + record.partition()
-                + ": " + record.value());
+        log.debug("Consumed message from partition {}: {}", record.partition(), record.value());
     }
 
     @KafkaListener(
@@ -24,8 +25,7 @@ public class OrderConsumer {
                     topic = "orders-poc", partitions = {"1"}),
             groupId = "orders-consumer-group")
     public void listenV2(ConsumerRecord<String, String> record) {
-        System.out.println("📥 Consumed message from partition " + record.partition()
-                + ": " + record.value());
+        log.debug("Consumed message from partition {}: {}", record.partition(), record.value());
     }
 
     @KafkaListener(
@@ -35,9 +35,9 @@ public class OrderConsumer {
             containerFactory = "kafkaListenerContainerFactoryCustom" // use batch factory
     )
     public void listenBatch(List<String> messages) {
-        System.out.println("📥 Consumed batch of " + messages.size() + " messages");
+        log.debug("Consumed batch of {} messages", messages.size());
         for (String message : messages) {
-            System.out.println(Thread.currentThread().getId() + ": "+message);
+            log.debug("{}: {}", Thread.currentThread().getId(), message);
         }
     }
 }

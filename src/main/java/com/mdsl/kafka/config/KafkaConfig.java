@@ -16,8 +16,6 @@ public class KafkaConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setBatchListener(true); // Enable batch consumption
-        factory.getContainerProperties().setPollTimeout(50000L);
-
         return factory;
     }
 }
